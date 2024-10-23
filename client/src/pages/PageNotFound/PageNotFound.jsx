@@ -1,8 +1,11 @@
 import React from 'react'
+import BgContainer from '../../shared-theme/BgContainer'
 
 const PageNotFound = () => {
   return (
-    <div>Page Not Found 404</div>
+    <BgContainer direction="column" justifyContent="space-between">
+      <div>Page Not Found 404</div>
+    </BgContainer>
   )
 }
 

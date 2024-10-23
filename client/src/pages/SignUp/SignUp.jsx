@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Box, Button, CssBaseline, FormLabel, FormControl, Link, TextField, Typography, Stack, Card as MuiCard } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../../shared-theme/AppTheme';
+import BgContainer from '../../shared-theme/BgContainer';
 import { ColorModeSelect } from '../../components';
 
 
@@ -107,10 +108,9 @@ export default function SignUp(props) {
   };
 
   return (
-    <AppTheme {...props}>
-      <CssBaseline enableColorScheme />
+    <>
       <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
-      <SignUpContainer direction="column" justifyContent="space-between">
+      <BgContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
           {/* <SitemarkIcon /> */}
           <Typography
@@ -192,7 +192,7 @@ export default function SignUp(props) {
             </Typography>
           </Box>
         </Card>
-      </SignUpContainer>
-    </AppTheme>
+      </BgContainer>
+    </>
   );
 }
