@@ -4,6 +4,7 @@ import BgContainer from '../../themes/BgContainer';
 import Card from '../../themes/Card';
 import { validateEmail, validatePassword, validateConfirmPassword, validateName } from '../../utils/validateInputs';
 import signupUser from '../../utils/signupUser';
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const [emailError, setEmailError] = useState(false);
@@ -15,6 +16,7 @@ export default function SignUp() {
   const [nameError, setNameError] = useState(false);
   const [nameErrorMessage, setNameErrorMessage] = useState('');
   const [apiErrorMessage, setApiErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   const validateInputs = () => {
     const email = document.getElementById('email').value;
@@ -83,6 +85,7 @@ export default function SignUp() {
       setApiErrorMessage(response.error);
     } else {
       console.log('User registered successfully:', response);
+      navigate("/")
     }
   };
 

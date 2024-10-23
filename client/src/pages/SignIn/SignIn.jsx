@@ -1,8 +1,23 @@
 import { useState } from 'react';
-import { Box, Button, Checkbox, FormControlLabel, FormLabel, FormControl, Link, TextField, Typography} from '@mui/material';
-import { ForgotPassword} from '../../components';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormLabel,
+  FormControl,
+  Link,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { ForgotPassword } from '../../components';
 import BgContainer from '../../themes/BgContainer';
 import Card from '../../themes/Card';
+import useAuth from '../../hooks/useAuth';
+import { validateEmail, validatePassword } from '../../utils/validateInputs';
+import signinUser from '../../utils/signinUser';
+import { useNavigate } from "react-router-dom";
+
 
 export default function SignIn(props) {
   const [emailError, setEmailError] = useState(false);
@@ -10,6 +25,9 @@ export default function SignIn(props) {
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [open, setOpen] = useState(false);
+  const [apiErrorMessage, setApiErrorMessage] = useState('');
+
+  const navigate = useNavigate();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -19,36 +37,46 @@ export default function SignIn(props) {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
-      return;
-    }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!validateInputs()) return;
+
     const data = new FormData(event.currentTarget);
-    console.log({
+    const userData = {
       email: data.get('email'),
       password: data.get('password'),
-    });
+    };
+
+    const response = await signinUser(userData);
+    if (response.error) {
+      setApiErrorMessage(response.error);
+    } else {
+      console.log('User loggedin successfully:', response);
+      navigate("/")
+    }
   };
 
   const validateInputs = () => {
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    let emailValidation = validateEmail(email);
+    let passwordValidation = validatePassword(password);
 
     let isValid = true;
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+    if (emailValidation.error) {
       setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
+      setEmailErrorMessage(emailValidation.message);
       isValid = false;
     } else {
       setEmailError(false);
       setEmailErrorMessage('');
     }
 
-    if (!password.value || password.value.length < 6) {
+    if (passwordValidation.error) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      setPasswordErrorMessage(passwordValidation.message);
       isValid = false;
     } else {
       setPasswordError(false);
@@ -69,6 +97,7 @@ export default function SignIn(props) {
           >
             Sign in
           </Typography>
+          {apiErrorMessage && <Typography color="error">{apiErrorMessage}</Typography>}
           <Box
             component="form"
             onSubmit={handleSubmit}

@@ -13,7 +13,8 @@ connectDB();
 
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:5173", //change to frontend url
+    credentials: true,
   })
 );
 app.use(express.json());
