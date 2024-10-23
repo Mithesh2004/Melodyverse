@@ -6,13 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from 'react';
 
 function Home() {
-  const { isLoggedIn, setIsLoggedIn, loading, error } = useAuth();
-  const navigate = useNavigate()
+  const { isLoggedIn, setIsLoggedIn, loading, checkAuth, error } = useAuth();
+  const checkAuthentication = async () => {
+    await checkAuth();
+  }
   useEffect(() => {
-    if (!isLoggedIn) {
-      alert("Signin to access this protected route")
-      return navigate("/signin");
-    }
+    checkAuthentication()
   }, [])
 
   return (

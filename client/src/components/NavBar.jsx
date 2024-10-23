@@ -9,11 +9,11 @@ import ColorModeSelect from './ColorModeSelect';
 import { useNavigate } from "react-router-dom";
 import logoutUser from "../utils/logoutUser";
 import useAuth from "../hooks/useAuth"
+import { useEffect } from 'react';
 
 export default function NavBar() {
     const navigate = useNavigate();
-    const { isLoggedIn, setIsLoggedIn, loading, error } = useAuth();
-
+    const { isLoggedIn, setIsLoggedIn, loading, checkAuth, error } = useAuth();
     const handleLogout = async () => {
         const result = await logoutUser();
         if (result.success) {
