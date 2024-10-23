@@ -3,8 +3,9 @@ import { Box, Button, FormLabel, FormControl, Link, TextField, Typography } from
 import BgContainer from '../../themes/BgContainer';
 import Card from '../../themes/Card';
 import { validateEmail, validatePassword, validateConfirmPassword, validateName } from '../../utils/validateInputs';
+import signupUser from '../../utils/signupUser';
 
-export default function SignUp(props) {
+export default function SignUp() {
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const [passwordError, setPasswordError] = useState(false);
@@ -13,6 +14,7 @@ export default function SignUp(props) {
   const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
   const [nameError, setNameError] = useState(false);
   const [nameErrorMessage, setNameErrorMessage] = useState('');
+  const [apiErrorMessage, setApiErrorMessage] = useState('');
 
   const validateInputs = () => {
     const email = document.getElementById('email').value;
@@ -65,18 +67,23 @@ export default function SignUp(props) {
     return isValid;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!validateInputs()) return;
 
     const data = new FormData(event.currentTarget);
-    const name = data.get('name')
-    const email = data.get('email')
-    const password = data.get('password')
-    const confirmPassword = data.get('confirmPassword')
-    console.log({
-      name, email, password, confirmPassword
-    });
+    const userData = {
+      userName: data.get('name'),
+      email: data.get('email'),
+      password: data.get('password'),
+    };
+
+    const response = await signupUser(userData);
+    if (response.error) {
+      setApiErrorMessage(response.error);
+    } else {
+      console.log('User registered successfully:', response);
+    }
   };
 
   return (
@@ -89,6 +96,7 @@ export default function SignUp(props) {
         >
           Sign up
         </Typography>
+        {apiErrorMessage && <Typography color="error">{apiErrorMessage}</Typography>}
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -102,7 +110,7 @@ export default function SignUp(props) {
               required
               fullWidth
               id="name"
-              placeholder="Name"
+              placeholder="Jon Snow"
               error={nameError}
               helperText={nameErrorMessage}
               color={nameError ? 'error' : 'primary'}
