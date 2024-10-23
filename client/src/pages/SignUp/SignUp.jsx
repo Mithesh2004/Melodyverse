@@ -1,89 +1,61 @@
 import { useState } from 'react';
-import { Box, Button, CssBaseline, FormLabel, FormControl, Link, TextField, Typography, Stack, Card as MuiCard } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import AppTheme from '../../shared-theme/AppTheme';
-import BgContainer from '../../shared-theme/BgContainer';
-import { ColorModeSelect } from '../../components';
-
-
-const Card = styled(MuiCard)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignSelf: 'center',
-  width: '100%',
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-  margin: 'auto',
-  boxShadow:
-    'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
-  [theme.breakpoints.up('sm')]: {
-    width: '450px',
-  },
-  ...theme.applyStyles('dark', {
-    boxShadow:
-      'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
-  }),
-}));
-
-const SignUpContainer = styled(Stack)(({ theme }) => ({
-  height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
-  minHeight: '100%',
-  padding: theme.spacing(2),
-  [theme.breakpoints.up('sm')]: {
-    padding: theme.spacing(4),
-  },
-  '&::before': {
-    content: '""',
-    display: 'block',
-    position: 'absolute',
-    zIndex: -1,
-    inset: 0,
-    backgroundImage:
-      'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
-    backgroundRepeat: 'no-repeat',
-    ...theme.applyStyles('dark', {
-      backgroundImage:
-        'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
-    }),
-  },
-}));
+import { Box, Button, FormLabel, FormControl, Link, TextField, Typography } from '@mui/material';
+import BgContainer from '../../themes/BgContainer';
+import Card from '../../themes/Card';
+import { validateEmail, validatePassword, validateConfirmPassword, validateName } from '../../utils/validateInputs';
 
 export default function SignUp(props) {
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
   const [nameError, setNameError] = useState(false);
   const [nameErrorMessage, setNameErrorMessage] = useState('');
 
   const validateInputs = () => {
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
-    const name = document.getElementById('name');
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const name = document.getElementById('name').value;
 
     let isValid = true;
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+    const emailValidation = validateEmail(email);
+    if (emailValidation.error) {
       setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
+      setEmailErrorMessage(emailValidation.message);
       isValid = false;
     } else {
       setEmailError(false);
       setEmailErrorMessage('');
     }
 
-    if (!password.value || password.value.length < 6) {
+    const passwordValidation = validatePassword(password);
+    if (passwordValidation.error) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      setPasswordErrorMessage(passwordValidation.message);
       isValid = false;
     } else {
       setPasswordError(false);
       setPasswordErrorMessage('');
     }
 
-    if (!name.value || name.value.length < 1) {
+    const confirmPasswordValidation = validateConfirmPassword(password, confirmPassword);
+    if (confirmPasswordValidation.error) {
+      setConfirmPasswordError(true);
+      setConfirmPasswordErrorMessage(confirmPasswordValidation.message);
+      isValid = false;
+    } else {
+      setConfirmPasswordError(false);
+      setConfirmPasswordErrorMessage('');
+    }
+
+    const nameValidation = validateName(name);
+    if (nameValidation.error) {
       setNameError(true);
-      setNameErrorMessage('Name is required.');
+      setNameErrorMessage(nameValidation.message);
       isValid = false;
     } else {
       setNameError(false);
@@ -94,105 +66,117 @@ export default function SignUp(props) {
   };
 
   const handleSubmit = (event) => {
-    if (nameError || emailError || passwordError) {
-      event.preventDefault();
-      return;
-    }
+    event.preventDefault();
+    if (!validateInputs()) return;
+
     const data = new FormData(event.currentTarget);
+    const name = data.get('name')
+    const email = data.get('email')
+    const password = data.get('password')
+    const confirmPassword = data.get('confirmPassword')
     console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
+      name, email, password, confirmPassword
     });
   };
 
   return (
-    <>
-      <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
-      <BgContainer direction="column" justifyContent="space-between">
-        <Card variant="outlined">
-          {/* <SitemarkIcon /> */}
-          <Typography
-            component="h1"
-            variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+    <BgContainer direction="column" justifyContent="space-between">
+      <Card variant="outlined">
+        <Typography
+          component="h1"
+          variant="h4"
+          sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+        >
+          Sign up
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+        >
+          <FormControl>
+            <FormLabel htmlFor="name">Full name</FormLabel>
+            <TextField
+              autoComplete="name"
+              name="name"
+              required
+              fullWidth
+              id="name"
+              placeholder="Name"
+              error={nameError}
+              helperText={nameErrorMessage}
+              color={nameError ? 'error' : 'primary'}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="email">Email</FormLabel>
+            <TextField
+              required
+              fullWidth
+              id="email"
+              placeholder="your@email.com"
+              name="email"
+              autoComplete="email"
+              variant="outlined"
+              error={emailError}
+              helperText={emailErrorMessage}
+              color={emailError ? 'error' : 'primary'}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <TextField
+              required
+              fullWidth
+              name="password"
+              placeholder="••••••"
+              type="password"
+              id="password"
+              autoComplete="new-password"
+              variant="outlined"
+              error={passwordError}
+              helperText={passwordErrorMessage}
+              color={passwordError ? 'error' : 'primary'}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+            <TextField
+              required
+              fullWidth
+              name="confirmPassword"
+              placeholder="••••••"
+              type="password"
+              id="confirmPassword"
+              autoComplete="new-password"
+              variant="outlined"
+              error={confirmPasswordError}
+              helperText={confirmPasswordErrorMessage}
+              color={confirmPasswordError ? 'error' : 'primary'}
+            />
+          </FormControl>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            onClick={validateInputs}
           >
             Sign up
+          </Button>
+          <Typography sx={{ textAlign: 'center' }}>
+            Already have an account?{' '}
+            <span>
+              <Link
+                href="/signin/"
+                variant="body2"
+                sx={{ alignSelf: 'center' }}
+              >
+                Sign in
+              </Link>
+            </span>
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-          >
-            <FormControl>
-              <FormLabel htmlFor="name">Full name</FormLabel>
-              <TextField
-                autoComplete="name"
-                name="name"
-                required
-                fullWidth
-                id="name"
-                placeholder="Jon Snow"
-                error={nameError}
-                helperText={nameErrorMessage}
-                color={nameError ? 'error' : 'primary'}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <TextField
-                required
-                fullWidth
-                id="email"
-                placeholder="your@email.com"
-                name="email"
-                autoComplete="email"
-                variant="outlined"
-                error={emailError}
-                helperText={emailErrorMessage}
-                color={passwordError ? 'error' : 'primary'}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
-              <TextField
-                required
-                fullWidth
-                name="password"
-                placeholder="••••••"
-                type="password"
-                id="password"
-                autoComplete="new-password"
-                variant="outlined"
-                error={passwordError}
-                helperText={passwordErrorMessage}
-                color={passwordError ? 'error' : 'primary'}
-              />
-            </FormControl>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={validateInputs}
-            >
-              Sign up
-            </Button>
-            <Typography sx={{ textAlign: 'center' }}>
-              Already have an account?{' '}
-              <span>
-                <Link
-                  href="/signin/"
-                  variant="body2"
-                  sx={{ alignSelf: 'center' }}
-                >
-                  Sign in
-                </Link>
-              </span>
-            </Typography>
-          </Box>
-        </Card>
-      </BgContainer>
-    </>
+        </Box>
+      </Card>
+    </BgContainer>
   );
 }

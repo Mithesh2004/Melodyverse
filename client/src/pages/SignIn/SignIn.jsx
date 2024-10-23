@@ -1,29 +1,8 @@
 import { useState } from 'react';
-import { Box, Button, Checkbox, CssBaseline, FormControlLabel, FormLabel, FormControl, Link, TextField, Typography, Stack, Card as MuiCard } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { ForgotPassword, ColorModeSelect } from '../../components';
-import AppTheme from '../../shared-theme/AppTheme';
-import BgContainer from '../../shared-theme/BgContainer';
-
-
-const Card = styled(MuiCard)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignSelf: 'center',
-  width: '100%',
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-  margin: 'auto',
-  [theme.breakpoints.up('sm')]: {
-    maxWidth: '450px',
-  },
-  boxShadow:
-    'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
-  ...theme.applyStyles('dark', {
-    boxShadow:
-      'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
-  }),
-}));
+import { Box, Button, Checkbox, FormControlLabel, FormLabel, FormControl, Link, TextField, Typography} from '@mui/material';
+import { ForgotPassword} from '../../components';
+import BgContainer from '../../themes/BgContainer';
+import Card from '../../themes/Card';
 
 export default function SignIn(props) {
   const [emailError, setEmailError] = useState(false);
@@ -82,7 +61,6 @@ export default function SignIn(props) {
   return (
     <>
       <BgContainer direction="column" justifyContent="space-between">
-        <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
         <Card variant="outlined">
           <Typography
             component="h1"
