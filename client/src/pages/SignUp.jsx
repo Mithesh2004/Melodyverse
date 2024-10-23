@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Box, Button, FormLabel, FormControl, Link, TextField, Typography } from '@mui/material';
-import BgContainer from '../../themes/BgContainer';
-import Card from '../../themes/Card';
-import { validateEmail, validatePassword, validateConfirmPassword, validateName } from '../../utils/validateInputs';
-import signupUser from '../../utils/signupUser';
+import BgContainer from '../themes/BgContainer';
+import Card from '../themes/Card';
+import { validateEmail, validatePassword, validateConfirmPassword, validateName } from '../utils/validateInputs';
+import signupUser from '../utils/signupUser';
 import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {

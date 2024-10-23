@@ -1,5 +1,5 @@
 import React from 'react'
-import BgContainer from '../../themes/BgContainer'
+import BgContainer from '../themes/BgContainer'
 
 const PageNotFound = () => {
   return (

@@ -10,12 +10,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { ForgotPassword } from '../../components';
-import BgContainer from '../../themes/BgContainer';
-import Card from '../../themes/Card';
-import useAuth from '../../hooks/useAuth';
-import { validateEmail, validatePassword } from '../../utils/validateInputs';
-import signinUser from '../../utils/signinUser';
+import { ForgotPassword } from '../components';
+import BgContainer from '../themes/BgContainer';
+import Card from '../themes/Card';
+import useAuth from '../hooks/useAuth';
+import { validateEmail, validatePassword } from '../utils/validateInputs';
+import signinUser from '../utils/signinUser';
 import { useNavigate } from "react-router-dom";
 
 
