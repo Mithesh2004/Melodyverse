@@ -27,7 +27,8 @@ Tech Stack used:
 - Express
 - MongoDb
 - JWT
-- Rest Api
+- Rest Apis
+- Mailjet
 
 Create a .env file and include the following:
 
@@ -35,6 +36,7 @@ Create a .env file and include the following:
 - MAILJET_SECRET_KEY - These two of them are used for mailing purpose for Forgot Password. And can be got from mailjet website under developer section
 - PORT - server port
 - CLIENT_PORT - client port
+- MONGO_URI
 - JWT_SECRET - Any Random String
 
 Running the server:
@@ -47,4 +49,6 @@ npm install
 npm run dev
 ```
 
-Note: The mailing service for forget password is done in the backend but it is not integrated with the frontend.
+Note: 
+- The protected route '/api/get-downloaded-songs' in backend.
+- The mailing service for forget password is done in the backend but it is not integrated with the frontend.
