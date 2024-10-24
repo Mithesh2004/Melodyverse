@@ -51,4 +51,5 @@ npm run dev
 
 Note: 
 - The protected route '/api/get-downloaded-songs' in backend.
+- If there is cors problem copy paste the exact url from the bowser inside the cors origin in the server.js file in the server folder
 - The mailing service for forget password is done in the backend but it is not integrated with the frontend.
