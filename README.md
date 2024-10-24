@@ -20,7 +20,7 @@ npm install
 npm run dev
 ```
 
-#server
+# Server
 
 Tech Stack used:
 
